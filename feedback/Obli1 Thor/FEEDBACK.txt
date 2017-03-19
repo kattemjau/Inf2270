@@ -1,0 +1,6 @@
+Inf2270 Oblig1
+
+Logisim krets:
+Kretsen fungerer fint. Viser god brukt av addere, men i denne obligen hadde det vært fint å lage sine egene addere for å vise hvordan addere er bygget opp.
+
+Fint skrevet pdf, men her kunne du ha brukt mer tid på logisim oppgaven enn pdf dokumentet.
