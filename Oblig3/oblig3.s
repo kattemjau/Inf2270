@@ -10,24 +10,55 @@
  # Registre:
 
 readbyte:
-	pushl	%ebp		# Standard funksjonsstart
-	movl	%esp,%ebp	#
+// 	pushl	%ebp		# Standard funksjonsstart
+// 	movl	%esp,%ebp	#
+//
+// 	pushl	8(%ebp)		#file
+// 	pushl $1				#nmemb
+// 	pushl $1				#size
+// 	pushl %edx			#pointer to what to read
+//
+// 	call fread		#returns a pointer to eax
+//
+// 	cmpl $0, %eax
+// 	jb error
+// 	movl %edx, %eax
+// 	movl %ebp, %esp
+// 	popl	%ebp		# Standard
+// 	ret			# retur.
+//
+// error:
+// 	movl $-1, %eax
+// 	movl %ebp, %esp
+// 	popl	%ebp		# Standard
+// 	ret			# retur.
 
-	leal 	0(%ebp),%edx		# pointer of second argument
-	pushl	8(%ebp)		#file
-	pushl $1				#nmemb
-	pushl $1				#size
-	pushl %edx			#pointer to what to read
+pushl	%ebp						# Standard funksjonsstart
+	movl	%esp,%ebp				#
+	pushl $1
+  leal  0(%esp),%edx
+	pushl 8(%ebp)
+	pushl $1 							# invalid push
+	pushl $1
+	pushl %edx
+	call  fread
+	movl  16(%esp), %edx
 
-	call fread		#returns a pointer to eax
+	addl 	$20, %esp
+	cmpl  $0,%eax
+	jbe   rb_error
+	movl 	%edx,%eax
+	jmp 	rb_x
+rb_error:
+	movl $-1, %eax
+	popl %ebp
+	ret
 
-	cmpl $0, %eax
 
+rb_x:
+	popl	%ebp					# Standard
+	ret									# retur.
 
-	movl %edx, %eax
-	movl %ebp, %esp
-	popl	%ebp		# Standard
-	ret			# retur.
 
 	.globl	readutf8char
  # Navn:	readutf8char

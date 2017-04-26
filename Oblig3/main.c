@@ -15,12 +15,12 @@ extern void writeutf8char (FILE *f, unicode u);
 
 int main() {
   printf("Creating file\n");
-  FILE *file = fopen("test.txt", "w+");
+  FILE *file = fopen("test.txt", "w+rb");
   byte bit = 5;
   printf("Writnig to file\n");
   writebyte(file, bit);
 
-  printf("Reading from file: %s\n",readbyte(file));
+  printf("Reading from file: %d\n",readbyte(file));
 
 
   printf("Closing file\n");
