@@ -13,6 +13,7 @@ readbyte:
 // 	pushl	%ebp		# Standard funksjonsstart
 // 	movl	%esp,%ebp	#
 //
+	// addl %edx, 16 #forget previously data
 // 	pushl	8(%ebp)		#file
 // 	pushl $1				#nmemb
 // 	pushl $1				#size
@@ -20,7 +21,7 @@ readbyte:
 //
 // 	call fread		#returns a pointer to eax
 //
-// 	cmpl $0, %eax
+// 	cmpl $0, %eax		#check if end of line
 // 	jb error
 // 	movl %edx, %eax
 // 	movl %ebp, %esp
@@ -105,6 +106,44 @@ writebyte:
 writeutf8char:
 	pushl	%ebp		# Standard funksjonsstart
 	movl	%esp,%ebp	#
+	#needs to check how manny bytes
 
-wu8_x:	popl	%ebp		# Standard
+	// movl 12(%ebp),%eax
+	leal 	12(%ebp),%eax		# pointer of second argument
+
+	testl $0x80,%eax
+	jz wu8_1byte
+	# We can assume that the last byte is of the form 10xxxxxx
+	testl $0x7000,%eax   # Testing this bit in byte n - 1: 1?xxxxxx
+	jnz wu8_2byte
+
+	testl $0x700000,%eax # Testing this bit in byte n - 2: 1?xxxxxx
+	jnz wu8_3byte
+	# Must be 4 byte
+	jmp wu8_4byte
+
+	pushl	8(%ebp)		#FILE
+	pushl $1
+	pushl $1
+	pushl %eax
+	call	fwrite
+	
+wu8_1byte:
+
+	popl	%ebp		# Standard
+	ret			# retur.
+
+wu8_2byte:
+
+	popl	%ebp		# Standard
+	ret			# retur.
+
+wu8_3byte:
+
+	popl	%ebp		# Standard
+	ret			# retur.
+
+wu8_4byte:
+
+	popl	%ebp		# Standard
 	ret			# retur.
