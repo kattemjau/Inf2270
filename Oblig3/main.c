@@ -20,11 +20,13 @@ int main() {
   printf("Writnig to file\n");
   // writebyte(file, bit);
 
-  printf("Reading from file: %x\n",readbyte(file));
-  printf("Reading from file: %x\n",readbyte(file));
-  printf("Reading from file: %x\n",readbyte(file));
-  printf("Reading from file: %x\n",readbyte(file));
-  printf("Reading from file: %x\n",readbyte(file));
+  // printf("Reading from file: %x\n",readbyte(file));
+  // printf("Reading from file: %x\n",readbyte(file));
+  // printf("Reading from file: %x\n",readbyte(file));
+  // printf("Reading from file: %x\n",readbyte(file));
+  // printf("Reading from file: %x\n",readbyte(file));
+
+  writeutf8char(file, 'a');
 
 
   printf("Closing file\n");
