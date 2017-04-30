@@ -47,7 +47,7 @@ pushl	%ebp		# Standard funksjonsstart
 movl	%esp,%ebp	#
 #needs to check how manny bytes
 // movl 12(%ebp), %eax
-
+subl	$8,%esp
 pushl 8(%ebp)
 call readbyte
 movl %eax, %edx
@@ -68,7 +68,6 @@ jge ru8_4byte
 ru8_1byte:
 jmp	exit
 
-
 ru8_2byte:
 
 jmp	exit
@@ -80,11 +79,6 @@ jmp	exit
 ru8_4byte:
 
 jmp	exit
-
-exit:
-movl %ebp, %esp
-popl	%ebp		# Standard
-ret			# retur.
 
 
 
@@ -144,7 +138,6 @@ wu8_1byte:
 
 
 wu8_2byte:
-
 	jmp	exit
 
 wu8_3byte:
