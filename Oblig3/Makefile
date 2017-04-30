@@ -3,17 +3,17 @@
 run: compile
 	./testnig
 
-compile:
-	gcc -m32 oblig3.s main.c -o testnig -std=c99
+compile: oblig3.s main.c
+	gcc -m32 oblig3.s main.c -o testnig -std=c99 -g
 
 clean:
-	rm -r *.txt
-	rm -r testnig
-	rm -r writebytes.s
+	rm -rf *.txt
+	rm -rf testnig
+	rm -rf writebytes.s
 
-test:
-	gcc -S writebytes.c -o writebytes.s -std=c99
+test: writebytes.c
+	gcc -S writebytes.c -o writebytes.s -std=c99 -g
 
-test2:
-	gcc -m32 oblig3.s test-oblig3.c -o testnig -std=c99 -g
+test2: clean
+	gcc -m32 oblig3.s dumpreg.s test-oblig3.c -o testnig -g
 	./testnig

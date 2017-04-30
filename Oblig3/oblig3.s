@@ -13,19 +13,19 @@ readbyte:
 	pushl	%ebp		# Standard funksjonsstart
 	movl	%esp,%ebp	#
 
-leal  0(%esp),%edx
-	// addl %edx, 16 #forget previously data
+	// call dumpreg
+	movl $0, 12(%ebp)
+	leal  12(%ebp),%edx
 	pushl	8(%ebp)		#file
 	pushl $1				#nmemb
 	pushl $1				#size
 	pushl %edx			#pointer to what to read
-
 	call fread		#returns a pointer to eax
-	movl  16(%esp), %edx
+	// call dumpreg
 
 	cmpl $0, %eax		#check if end of line
-	jb error
-	movl %edx, %eax
+	je error
+	movl 12(%ebp), %eax
 	movl %ebp, %esp
 	popl	%ebp		# Standard
 	ret			# retur.
@@ -35,33 +35,6 @@ error:
 	movl %ebp, %esp
 	popl	%ebp		# Standard
 	ret			# retur.
-//
-// pushl	%ebp						# Standard funksjonsstart
-// 	movl	%esp,%ebp				#
-// 	pushl $1
-//   leal  0(%esp),%edx
-// 	pushl 8(%ebp)
-// 	pushl $1 							# invalid push
-// 	pushl $1
-// 	pushl %edx
-// 	call  fread
-// 	movl  16(%esp), %edx
-//
-// 	addl 	$20, %esp
-// 	cmpl  $0,%eax
-// 	jbe   rb_error
-// 	movl 	%edx,%eax
-// 	jmp 	rb_x
-// rb_error:
-// 	movl $-1, %eax
-// 	popl %ebp
-// 	ret
-//
-//
-// rb_x:
-// 	popl	%ebp					# Standard
-// 	ret									# retur.
-//
 
 	.globl	readutf8char
  # Navn:	readutf8char
@@ -70,11 +43,49 @@ error:
  # Registre:
 
 readutf8char:
-	pushl	%ebp		# Standard funksjonsstart
-	movl	%esp,%ebp	#
+pushl	%ebp		# Standard funksjonsstart
+movl	%esp,%ebp	#
+#needs to check how manny bytes
+// movl 12(%ebp), %eax
 
-	popl	%ebp		# Standard
-	ret			# retur.
+pushl 8(%ebp)
+call readbyte
+movl %eax, %edx
+
+cmpl $0x80,%edx
+jl ru8_1byte
+//
+cmpl $0x800,%edx
+jl ru8_2byte
+//
+cmpl $0x10000,%edx
+jl ru8_3byte
+//
+cmpl $0x10000,%edx
+jge ru8_4byte
+
+
+ru8_1byte:
+jmp	exit
+
+
+ru8_2byte:
+
+jmp	exit
+
+ru8_3byte:
+
+jmp	exit
+
+ru8_4byte:
+
+jmp	exit
+
+exit:
+movl %ebp, %esp
+popl	%ebp		# Standard
+ret			# retur.
+
 
 
 	.globl	writebyte
@@ -109,46 +120,42 @@ writeutf8char:
 	pushl	%ebp		# Standard funksjonsstart
 	movl	%esp,%ebp	#
 	#needs to check how manny bytes
+	// movl 12(%ebp), %eax
+	movl 12(%ebp), %edx
 
-	// movl 12(%ebp),%eax
-	leal 	12(%ebp),%eax		# pointer of second argument
+	cmpl $0x80,%edx
+	jl wu8_1byte
+	//
+	cmpl $0x800,%edx
+	jl wu8_2byte
+	//
+	cmpl $0x10000,%edx
+	jl wu8_3byte
+	//
+	cmpl $0x10000,%edx
+	jge wu8_4byte
 
-	testl $0x80,%eax
-	jz wu8_4byte
-	# We can assume that the last byte is of the form 10xxxxxx
-	testl $0x7000,%eax   # Testing this bit in byte n - 1: 1?xxxxxx
-	jnz wu8_3byte
-
-	testl $0x700000,%eax # Testing this bit in byte n - 2: 1?xxxxxx
-	jnz wu8_2byte
-	# Must be 4 byte
-	jmp wu8_1byte
-
-	// pushl	8(%ebp)		#FILE
-	// pushl $1
-	// pushl $1
-	// pushl %eax
-	// call	fwrite
 
 wu8_1byte:
-	movl $1, %eax
-	popl	%ebp		# Standard
-	ret			# retur.
+	pushl %edx
+	pushl 8(%ebp)
+	call writebyte
+	jmp	exit
+
 
 wu8_2byte:
-movl $2, %eax
 
-	popl	%ebp		# Standard
-	ret			# retur.
+	jmp	exit
 
 wu8_3byte:
-movl $3, %eax
 
-	popl	%ebp		# Standard
-	ret			# retur.
+	jmp	exit
 
 wu8_4byte:
-movl $4, %eax
 
+	jmp	exit
+
+exit:
+	movl %ebp, %esp
 	popl	%ebp		# Standard
 	ret			# retur.

@@ -11,25 +11,20 @@ typedef unsigned long unicode;
 extern int  readbyte (FILE *f);
 extern long readutf8char (FILE *f);
 extern void writebyte (FILE *f, byte b);
-extern void writeutf8char (FILE *f, unicode u);
+extern char writeutf8char (FILE *f, unicode u);
 
 int main() {
   printf("Creating file\n");
-  FILE *file = fopen("test5.txt", "w+rb");
-  byte bit = 5;
-  printf("Writnig to file\n");
-  // writebyte(file, bit);
+  FILE *file = fopen("test.txt", "w+rb");
+  byte bit[] = { '$', ' ', 'A', '=', '2', 'x' };
+  unicode u[] = { 0x24, 0x20, 0x41, 0x3d, 0x32, 0x78 };  // printf("Writnig to file\n");
+  // writebyte(file, bit[0]);
 
   // printf("Reading from file: %x\n",readbyte(file));
-  // printf("Reading from file: %x\n",readbyte(file));
-  // printf("Reading from file: %x\n",readbyte(file));
-  // printf("Reading from file: %x\n",readbyte(file));
-  // printf("Reading from file: %x\n",readbyte(file));
 
-  writeutf8char(file, 'a');
+  printf("writeing unicode %x\n",  writeutf8char(file, u[0]));
 
 
-  printf("Closing file\n");
   fclose(file);
   return 0;
 }
